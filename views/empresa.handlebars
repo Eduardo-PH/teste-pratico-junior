@@ -1,0 +1,107 @@
+<h1>Cadastro de empresa</h1>
+
+    <!-- Adicionando Javascript -->
+    <script>
+
+        function limpa_formulário_cep() {
+            //Limpa valores do formulário de cep.
+            document.getElementById('endereco').value = ("");
+            document.getElementById('bairro').value = ("");
+            document.getElementById('cidade').value = ("");
+            document.getElementById('estado').value = ("");
+        }
+
+        function meu_callback(conteudo) {
+            if (!("erro" in conteudo)) {
+                //Atualiza os campos com os valores.
+                document.getElementById('endereco').value = (conteudo.logradouro);
+                document.getElementById('bairro').value = (conteudo.bairro);
+                document.getElementById('cidade').value = (conteudo.localidade);
+                document.getElementById('estado').value = (conteudo.uf);
+            } //end if.
+            else {
+                //CEP não Encontrado.
+                limpa_formulário_cep();
+                alert("CEP não encontrado.");
+            }
+        }
+
+        function pesquisacep(valor) {
+
+            //Nova variável "cep" somente com dígitos.
+            var cep = valor.replace(/\D/g, '');
+
+            //Verifica se campo cep possui valor informado.
+            if (cep != "") {
+
+                //Expressão regular para validar o CEP.
+                var validacep = /^[0-9]{8}$/;
+
+                //Valida o formato do CEP.
+                if (validacep.test(cep)) {
+
+                    //Preenche os campos com "..." enquanto consulta webservice.
+                    document.getElementById('endereco').value = "...";
+                    document.getElementById('bairro').value = "...";
+                    document.getElementById('cidade').value = "...";
+                    document.getElementById('estado').value = "...";
+
+                    //Cria um elemento javascript.
+                    var script = document.createElement('script');
+
+                    //Sincroniza com o callback.
+                    script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=meu_callback';
+
+                    //Insere script no documento e carrega o conteúdo.
+                    document.body.appendChild(script);
+
+                } //end if.
+                else {
+                    //cep é inválido.
+                    limpa_formulário_cep();
+                    alert("Formato de CEP inválido.");
+                }
+            } //end if.
+            else {
+                //cep sem valor, limpa formulário.
+                limpa_formulário_cep();
+            }
+        };
+
+    </script>
+
+    <form action="/addemp" method="POST">
+
+        <div class="container">
+            <div class="card">
+
+                <p>Nome da empresa: </p>
+                <input type="text" name="name" minlength="5">
+                <p>CNPJ: </p>
+                <input type="tel" name="cnpj" pattern="[0-9]{2}.[0-9]{3}.[0-9]{3}/[0-9]{4}-[0-9]{2}"
+                    placeholder="00.000.000/0000-00">
+                <p>Data de Fundação: </p>
+                <input type="date" name="data">
+                <p>E-mail comercial: </p>
+                <input type="email" name="email" placeholder="@gmail.com">
+                <p>Telefone: </p>
+                <input type="tel" name="telefone" pattern="[0-9]{2} [0-9]{5}-[0-9]{4}" placeholder="00 00000-0000">
+
+                <p>CEP: </p>
+                <input id="cep" type="text" name="cep" value="" size="10" maxlength="9"
+                onblur="pesquisacep(this.value);" required />
+                <p>Endereço: </p>
+                <input id="endereco" type="text" name="endereco" /><br>
+                <p>Bairro: </p>
+                <input id="bairro" type="text" name="bairro" size="40" />
+                <p>Cidade: </p>
+                <input id="cidade" type="text" name="cidade" size="40" />
+                <p>Estado: </p>
+                <input id="estado" type="text" name="estado" size="2" /><br>
+
+                <button type="submit">Cadastrar</button>
+
+            </div>
+        </div>
+
+    </form>

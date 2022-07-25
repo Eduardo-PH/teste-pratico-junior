@@ -1,0 +1,24 @@
+<h1>Lista de empresas</h1>
+
+<div class="container">
+  <div class="card">
+{{#each posts}}
+
+    <small>{{createdAt}}</small>
+    <h2>{{nome}}</h2>
+    <p>CNPJ | {{cnpj}}</p>
+    <p>Data de Fundação | {{data}}</p>
+    <p>E-mail comercial | {{email}}</p>
+    <p>Telefone | {{telefone}}</p>
+    <p>CEP | {{cep}}</p>
+    <p>Endereço | {{endereco}}</p>
+    <p>Bairro | {{bairro}}</p>
+    <p>Cidade | {{cidade}}</p>
+    <p>Estado | {{estado}}</p>
+    <a href="/deletar/{{id}}"><button>Deletar</button></a>
+    <hr>
+{{/each}}
+    <a href="/cademp"><button>Cadastrar empresas</button></a>
+    <a href="/caduse"><button>cadastrar usuario</button></a>
+    </div>
+</div> 
